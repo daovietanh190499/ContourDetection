@@ -25,6 +25,12 @@ Trong đó:
  - `model_save_path` là vị trí lưu mô hình sau mỗi epoch
  - `model_save_name` là tên mô hình tiền huấn luyện được truyền vào để tiếp tục huấn luyện, nếu huấn luyện từ đầu thì `model_save_name` bằng rỗng
 
+Một số cài đặt khác
+ - `batch_size`: kích thước lô (mặc định 64)
+ - `lr`: tốc độ học (mặc định 1e-4)
+ - `optimizer`: Adam
+ - `critertion`: BCE
+
 Tiến hành huấn luyện bằng đối tượng Trainer
 
 ```
