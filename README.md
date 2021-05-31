@@ -1,10 +1,10 @@
+### Mã nguồn cài đặt cho hai phương pháp CEDN (Convolutional Encoder Decoder Network) và RCN (RefineContourNet)
+
+
+
 ### Huấn luyện với tập dữ liệu Pascal VOC + Pascal Context
 
-Tải tập PASCAL VOC (ảnh huấn luyện) và PASCAL CONTEXT (ảnh nhãn) tại đây 
-
-`
-https://drive.google.com/drive/folders/15g2GNEQtr8ip9Tg-P_cTaK-iRKNZEtjQ?usp=sharing
-`
+Tải tập PASCAL VOC (ảnh huấn luyện) và PASCAL CONTEXT (ảnh nhãn) [tại đây](https://drive.google.com/drive/folders/15g2GNEQtr8ip9Tg-P_cTaK-iRKNZEtjQ?usp=sharing)
 
 Cấu trúc thư mục bao gồm:
   - Thư mục `ctns` chứa các ảnh nhãn
