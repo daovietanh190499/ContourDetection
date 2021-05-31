@@ -36,8 +36,8 @@ Tiến hành huấn luyện bằng đối tượng Trainer
 ```
 from RCN import rf101
 from CEDN import CEDN
-trainer = Trainer(CEDN())
-#trainer = Trainer(rf101())
+trainer = Trainer(CEDN()) #Dành cho huấn luyện mô hình CEDN
+#trainer = Trainer(rf101()) #Dành cho việc huấn luyện mô hình RCN
 trainer.train()
 ```
 
