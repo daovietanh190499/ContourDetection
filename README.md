@@ -1,4 +1,4 @@
-### Huấn luyện với tập Pascal VOC
+### Huấn luyện với tập dữ liệu Pascal VOC + Pascal Context
 
 Cấu trúc thư mục bao gồm
   - Thư mục cnts chứa các ảnh nhãn
@@ -20,7 +20,9 @@ self.model_save_name = "cedn_epoch_9.pth"
 Huấn luyện bằng đối tượng Trainer
 
 ```
+from RCN import rf101
 from CEDN import CEDN
 trainer = Trainer(CEDN())
+#trainer = Trainer(rf101())
 trainer.train()
 ```
