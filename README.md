@@ -40,3 +40,15 @@ trainer = Trainer(CEDN())
 #trainer = Trainer(rf101())
 trainer.train()
 ```
+
+Để hiển thị 1 lô trong dataloader
+
+```
+trainer.show_dataloader()
+```
+
+Để hiển thị biểu đồ thất thoát
+
+```
+trainer.loss_plot()
+```
