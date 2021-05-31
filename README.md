@@ -52,3 +52,5 @@ trainer.show_dataloader()
 ```
 trainer.loss_plot()
 ```
+
+Đối với các loại dữ liệu nâng cao tự tạo có thể thay đổi đối tượng Dataloader cho phù hợp
