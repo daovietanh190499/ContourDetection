@@ -1,8 +1,8 @@
 ### Huấn luyện với tập dữ liệu Pascal VOC + Pascal Context
 
 Cấu trúc thư mục bao gồm:
-  - Thư mục cnts chứa các ảnh nhãn
-  - Thư mục images chứa các ảnh gốc (JPEGImages)
+  - Thư mục `ctns` chứa các ảnh nhãn
+  - Thư mục `images` chứa các ảnh gốc (JPEGImages)
   - Tệp `train.txt` chứa mã của các ảnh huấn luyện, gồm 10581 ảnh
   - Tệp `val.txt` chứa mã của các ảnh kiểm thử, gồm 1449 ảnh
 
