@@ -1,6 +1,7 @@
 ### Mã nguồn cài đặt cho hai phương pháp CEDN (Convolutional Encoder Decoder Network) và RCN (RefineContourNet)
 
-
+  - CEDN: [https://arxiv.org/pdf/1603.04530.pdf](https://arxiv.org/pdf/1603.04530.pdf)
+  - RCN: [https://arxiv.org/pdf/1904.13353.pdf](https://arxiv.org/pdf/1904.13353.pdf)
 
 ### Huấn luyện với tập dữ liệu Pascal VOC + Pascal Context
 
