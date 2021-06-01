@@ -171,13 +171,13 @@ class Trainer:
     running_accuracy = 0
     train_accuracy = 0
     print_every = self.print_freq
-    print("Start load image! please wait until train start")
-    for steps, (inputs, labels) in enumerate(self.iniloader):
-      if int((steps*100)/(len(self.iniloader) - 1))%10 == 0:
-        print(str(steps), end="___")
-      if steps == len(self.iniloader) - 1:
-        print(' ')
-    print("End load image")
+    # print("Start load image! please wait until train start")
+    #for steps, (inputs, labels) in enumerate(self.iniloader):
+    #  if int((steps*100)/(len(self.iniloader) - 1))%10 == 0:
+    #    print(str(steps), end="___")
+    #  if steps == len(self.iniloader) - 1:
+    #    print(' ')
+    # print("End load image")
     for epoch in range(epochs[0], epochs[1]):
       for steps, (inputs, labels) in enumerate(self.trainloader):
         inputs, labels = inputs.to(self.device), labels.to(self.device)
