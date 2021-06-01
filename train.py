@@ -124,9 +124,10 @@ class Trainer:
     self.model_save_name = model_save_name
     self.start_epoch = start_epoch
     self.max_epoch = max_epoch
-    self.iniloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='resize'), batch_size=self.batch_size)
-    self.trainloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop'), batch_size=self.batch_size)
-    self.testloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop'), batch_size=self.batch_size)
+    if images_path != "" or ctns_path != "" or train_path != "" or val_path != "":
+      self.iniloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='resize'), batch_size=self.batch_size)
+      self.trainloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop'), batch_size=self.batch_size)
+      self.testloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop'), batch_size=self.batch_size)
 
 
   def loss(self,outputs, targets):
