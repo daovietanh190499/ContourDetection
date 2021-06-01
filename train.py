@@ -195,7 +195,7 @@ class Trainer:
         running_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
         train_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
 
-        if steps % print_every == 0:
+        if steps % print_every == 0 and steps != 0:
           print(f"Epoch [{epoch+1}|{epochs[1]}] "
               f"Iter [{steps}|{len(self.trainloader)}] "
               f"Train loss: {running_loss/print_every:.3f} ")
