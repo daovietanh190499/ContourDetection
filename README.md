@@ -13,18 +13,39 @@ Cấu trúc thư mục bao gồm:
   - Tệp `train.txt` chứa mã của các ảnh huấn luyện, gồm 10581 ảnh
   - Tệp `val.txt` chứa mã của các ảnh kiểm thử, gồm 1449 ảnh
 
-Thay đổi các tham số trong file train.py
+Tiến hành khởi tạo đối tượng Trainer
 
 ```
-self.images_path = "/content/drive/MyDrive/convert_dataset/images/"
-self.ctns_path = "/content/drive/MyDrive/convert_dataset/ctns/"
-self.train_path = "/content/drive/MyDrive/train.txt"
-self.val_path = "/content/drive/MyDrive/val.txt"
-self.model_save_path = "/content/drive/MyDrive/model_seg/"
-self.model_save_name = "cedn_epoch_9.pth"
+from RCN import rf101
+from CEDN import CEDN
+from train import Trainer
+
+trainer = Trainer(CEDN()) #Dành cho huấn luyện mô hình CEDN
+#trainer = Trainer(rf101()) #Dành cho việc huấn luyện mô hình RCN
+```
+
+Thay đổi các cài đặt bằng lệnh `set_config`, bắt buộc phải chạy trong lần đầu huấn luyện
+
+```
+trainer.set_config(
+    lr=1e-4, 
+    batch_size=64,
+    start_epoch=30,
+    max_epoch = 100,
+    images_path="",
+    ctns_path="",
+    train_path="",
+    val_path="",
+    model_save_path="",
+    model_save_name=""
+)
 ```
 
 Trong đó:
+ - `lr`: tốc độ học (mặc định 1e-4)
+ - `batch_size`: kích thước lô (mặc định 64)
+ - `start_epoch`: vị trí lần lặp khởi đầu
+ - `max_epoch`: vị trí lần lặp tối đa
  - `images_path` là đường dẫn tới thư mục ảnh gốc
  - `ctns_path` là đường dẫn tới thư mục nhãn
  - `train_path` là đường dẫn tới tệp `train.txt`
@@ -32,20 +53,13 @@ Trong đó:
  - `model_save_path` là vị trí lưu mô hình sau mỗi epoch
  - `model_save_name` là tên mô hình tiền huấn luyện được truyền vào để tiếp tục huấn luyện, nếu huấn luyện từ đầu thì `model_save_name` bằng rỗng
 
-Một số cài đặt khác
- - `batch_size`: kích thước lô (mặc định 64)
- - `lr`: tốc độ học (mặc định 1e-4)
+Một số thông tin khác 
  - `optimizer`: Adam
  - `critertion`: BCE
 
-Tiến hành huấn luyện bằng đối tượng Trainer
+Để tiến hành huấn luyện bằng tối tượng `trainer`
 
 ```
-from RCN import rf101
-from CEDN import CEDN
-from train import Trainer
-trainer = Trainer(CEDN()) #Dành cho huấn luyện mô hình CEDN
-#trainer = Trainer(rf101()) #Dành cho việc huấn luyện mô hình RCN
 trainer.train()
 ```
 
