@@ -101,6 +101,26 @@ class Trainer:
     self.mse = nn.MSELoss(reduction = "none")
     self.criterion = F.binary_cross_entropy
     self.scheduler = lr_scheduler.StepLR(self.optimizer, step_size=1, gamma=0.98)
+    
+  def set_config(
+    self,
+    lr=1e-4, 
+    batch_size=64, 
+    images_path = "/content/drive/MyDrive/segment/convert_dataset/images/",
+    ctns_path = "/content/drive/MyDrive/segment/convert_dataset/ctns/",
+    train_path = "/content/drive/MyDrive/segment/Contour-Detection-Pytorch/val.txt",
+    val_path = "/content/drive/MyDrive/segment/Contour-Detection-Pytorch/val1.txt",
+    model_save_path = "/content/",
+    model_save_name = "cedn_epoch_30.pth"
+  ):
+    self.lr=lr
+    self.batch_size=batch_size 
+    self.images_path = images_path
+    self.ctns_path = ctns_path
+    self.train_path = train_path
+    self.val_path = val_path
+    self.model_save_path = model_save_path
+    self.model_save_name = model_save_name
 
 
   def loss(self,outputs, targets):
