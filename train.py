@@ -89,8 +89,6 @@ class Trainer:
     self.batch_size = 64
     self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     self.model = model
-    if self.model_save_path and self.model_save_name:
-      self.model.load_state_dict(torch.load(self.model_save_path + self.model_save_name))
     self.model.to(self.device)
     print("device: ", self.device)
     self.model.train()
@@ -128,6 +126,8 @@ class Trainer:
       self.iniloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='resize'), batch_size=self.batch_size)
       self.trainloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop'), batch_size=self.batch_size)
       self.testloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop'), batch_size=self.batch_size)
+    if self.model_save_path and self.model_save_name:
+      self.model.load_state_dict(torch.load(self.model_save_path + self.model_save_name))
 
 
   def loss(self,outputs, targets):
