@@ -76,11 +76,13 @@ class Trainer:
     self.train_path = "/content/drive/MyDrive/train.txt"
     self.val_path = "/content/drive/MyDrive/val.txt"
     self.model_save_path = "/content/drive/MyDrive/model_seg/"
-    self.model_save_name = "cedn_epoch_9.pth"
+    self.model_save_name = ""
     self.train_losses = []
     self.test_losses = []
     self.train_accuracies = []
     self.test_accuracies = []
+    self.start_epoch = 1
+    self.max_epoch = 100
     self.save_epoch_freq = 1
     self.save_iter_freq = 50
     self.print_freq = 10
@@ -105,13 +107,15 @@ class Trainer:
   def set_config(
     self,
     lr=1e-4, 
-    batch_size=64, 
-    images_path = "/content/drive/MyDrive/segment/convert_dataset/images/",
-    ctns_path = "/content/drive/MyDrive/segment/convert_dataset/ctns/",
-    train_path = "/content/drive/MyDrive/segment/Contour-Detection-Pytorch/val.txt",
-    val_path = "/content/drive/MyDrive/segment/Contour-Detection-Pytorch/val1.txt",
-    model_save_path = "/content/",
-    model_save_name = "cedn_epoch_30.pth"
+    batch_size=64,
+    start_epoch=30,
+    max_epoch = 100,
+    images_path="",
+    ctns_path="",
+    train_path="",
+    val_path="",
+    model_save_path="",
+    model_save_name=""
   ):
     self.lr=lr
     self.batch_size=batch_size 
@@ -121,6 +125,8 @@ class Trainer:
     self.val_path = val_path
     self.model_save_path = model_save_path
     self.model_save_name = model_save_name
+    self.start_epoch = start_epoch
+    self.max_epoch = max_epoch
 
 
   def loss(self,outputs, targets):
@@ -158,7 +164,7 @@ class Trainer:
     plt.show()
 
   def train(self):
-    epochs = (9, 30)
+    epochs = (self.start_epoch, self.max_epoch)
     running_loss = 0
     train_loss = 0
     running_accuracy = 0
