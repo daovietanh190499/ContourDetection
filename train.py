@@ -71,11 +71,11 @@ class CustomDataset(Dataset):
 
 class Trainer:
   def __init__(self, model):
-    self.images_path = "/content/drive/MyDrive/convert_dataset/images/"
-    self.ctns_path = "/content/drive/MyDrive/convert_dataset/ctns/"
-    self.train_path = "/content/drive/MyDrive/train.txt"
-    self.val_path = "/content/drive/MyDrive/val.txt"
-    self.model_save_path = "/content/drive/MyDrive/model_seg/"
+    self.images_path = ""
+    self.ctns_path = ""
+    self.train_path = ""
+    self.val_path = ""
+    self.model_save_path = ""
     self.model_save_name = ""
     self.train_losses = []
     self.test_losses = []
@@ -88,9 +88,6 @@ class Trainer:
     self.print_freq = 10
     self.batch_size = 64
     self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    self.iniloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='resize'), batch_size=self.batch_size)
-    self.trainloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop'), batch_size=self.batch_size)
-    self.testloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop'), batch_size=self.batch_size)
     self.model = model
     if self.model_save_path and self.model_save_name:
       self.model.load_state_dict(torch.load(self.model_save_path + self.model_save_name))
@@ -127,6 +124,9 @@ class Trainer:
     self.model_save_name = model_save_name
     self.start_epoch = start_epoch
     self.max_epoch = max_epoch
+    self.iniloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='resize'), batch_size=self.batch_size)
+    self.trainloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop'), batch_size=self.batch_size)
+    self.testloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop'), batch_size=self.batch_size)
 
 
   def loss(self,outputs, targets):
