@@ -285,3 +285,6 @@ class Trainer:
       if epoch % self.save_epoch_freq == 0:
         print("Saving state ...")
         torch.save(self.model.state_dict(), self.model_save_path + 'cedn_epoch_' + str(epoch + 1) +'.pth')
+    
+    for loader_process in multi_loader:
+        loader_process.join() 
