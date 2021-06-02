@@ -20,6 +20,7 @@ import argparse
 import tqdm
 import sys
 import random
+from multiprocessing import Process, Queue
 
 class CustomDataset(Dataset):
   def __init__(self, image_dir, label_dir, imgs_ann, mode, aug_mode):
@@ -68,6 +69,18 @@ class CustomDataset(Dataset):
     label_img = Image.open(self.label_dir + self.imgs[idx] + '.jpg')
     input, label = self.transform(input_img, label_img, self.mode, self.aug_mode)
     return input, label
+  
+  def get_next_batch(self, batch_size):
+    idx = np.random.randint(0, len(self.imgs), size = batch_size)
+    input_batch = torch.empty(batch_size,3,224,224)
+    label_batch = torch.empty(batch_size,1,224,224)
+
+    for i in range(batch_size):
+        input_img = Image.open(self.image_dir + self.imgs[idx[i]] + '.jpg').convert('RGB')
+        label_img = Image.open(self.label_dir + self.imgs[idx[i]] + '.jpg')
+        input_batch[i], label_batch[i] = self.transform(input_img, label_img, self.mode, self.aug_mode)
+    
+    return input_batch, label_batch
 
 class Trainer:
   def __init__(self, model):
@@ -83,6 +96,11 @@ class Trainer:
     self.test_accuracies = []
     self.start_epoch = 1
     self.max_epoch = 100
+    self.data_queue = Queue()
+    self.workers = 5
+    self.iniloader = None
+    self.trainloader = None
+    self.testloader = None
     self.save_epoch_freq = 1
     self.save_iter_freq = 50
     self.print_freq = 10
@@ -163,6 +181,14 @@ class Trainer:
     plt.plot(self.test_losses, label='Validation loss')
     plt.legend(frameon=False)
     plt.show()
+    
+  def add_batch2queue(self, num_iter):
+    while(self.data_queue.qsize() > 100):
+      time.sleep(5)
+      continue
+    for i in range(num_iter):
+      self.data_queue.put(self.trainloader.get_next_batch(self.batch_size))
+    time.sleep(50)
 
   def train(self):
     epochs = (self.start_epoch, self.max_epoch)
@@ -171,6 +197,7 @@ class Trainer:
     running_accuracy = 0
     train_accuracy = 0
     print_every = self.print_freq
+    
     # print("Start load image! please wait until train start")
     #for steps, (inputs, labels) in enumerate(self.iniloader):
     #  if int((steps*100)/(len(self.iniloader) - 1))%10 == 0:
@@ -178,9 +205,27 @@ class Trainer:
     #  if steps == len(self.iniloader) - 1:
     #    print(' ')
     # print("End load image")
+    
+    multi_loader = []
+    num_iter = len(self.trainloader)*(self.max_epoch - self.start_epoch))
+    num_iter_worker = num_iter//self.workers
+    for i in range(self.workers):
+      multi_loader.append(Process(target=self.add_batch2queue, args=(self, num_iter_worker if num_iter_worker < total_iter else total_iter)))
+      num_iter -= num_iter_worker
+    
+    for loader_process in multi_loader:
+        loader_process.start()
+    time.sleep(1)
+    
     for epoch in range(epochs[0], epochs[1]):
-      for steps, (inputs, labels) in enumerate(self.trainloader):
-        inputs, labels = inputs.to(self.device), labels.to(self.device)
+#       for steps, data in enumerate(self.trainloader):
+      for _ in range(len(self.trainloader)):
+        if(self.data_queue.empty()):
+          time.sleep(5)
+          continue
+        else:
+          data = self.data_queue.get()
+        inputs, labels = data[0], data[1]
         self.optimizer.zero_grad()
         logps = self.model.forward(inputs)
         loss = self.loss(logps, labels)
@@ -195,7 +240,7 @@ class Trainer:
         running_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
         train_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
 
-        if steps % print_every == 0 and steps != 0:
+        if (steps % print_every == 0 and steps != 0):
           print(f"Epoch [{epoch+1}|{epochs[1]}] "
               f"Iter [{steps}|{len(self.trainloader)}] "
               f"Train loss: {running_loss/print_every:.3f} ")
