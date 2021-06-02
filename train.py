@@ -219,7 +219,7 @@ class Trainer:
     
     for epoch in range(epochs[0], epochs[1]):
 #       for steps, data in enumerate(self.trainloader):
-      for _ in range(len(self.trainloader)):
+      for steps in range(len(self.trainloader)):
         if(self.data_queue.empty()):
           time.sleep(5)
           continue
