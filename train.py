@@ -225,7 +225,7 @@ class Trainer:
           continue
         else:
           data = self.data_queue.get()
-        inputs, labels = data[0], data[1]
+        inputs, labels = data[0].to(self.device), data[1].to(self.device)
         self.optimizer.zero_grad()
         logps = self.model.forward(inputs)
         loss = self.loss(logps, labels)
