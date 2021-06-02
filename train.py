@@ -207,7 +207,7 @@ class Trainer:
     # print("End load image")
     
     multi_loader = []
-    num_iter = len(self.trainloader)*(self.max_epoch - self.start_epoch))
+    num_iter = len(self.trainloader)*(self.max_epoch - self.start_epoch)
     num_iter_worker = num_iter//self.workers
     for i in range(self.workers):
       multi_loader.append(Process(target=self.add_batch2queue, args=(self, num_iter_worker if num_iter_worker < total_iter else total_iter)))
