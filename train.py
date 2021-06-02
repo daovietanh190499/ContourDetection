@@ -141,7 +141,7 @@ class Trainer:
     self.start_epoch = start_epoch
     self.max_epoch = max_epoch
     if images_path != "" or ctns_path != "" or train_path != "" or val_path != "":
-      self.iniloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='resize'), batch_size=self.batch_size)
+      self.iniloader = CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop')
       self.trainloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop'), batch_size=self.batch_size)
       self.testloader = DataLoader(CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop'), batch_size=self.batch_size)
     if self.model_save_path and self.model_save_name:
@@ -187,7 +187,7 @@ class Trainer:
       time.sleep(5)
       continue
     for i in range(num_iter):
-      self.data_queue.put(self.trainloader.get_next_batch(self.batch_size))
+      self.data_queue.put(self.initloader.get_next_batch(self.batch_size))
     time.sleep(50)
 
   def train(self):
