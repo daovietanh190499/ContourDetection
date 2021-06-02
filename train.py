@@ -187,7 +187,7 @@ class Trainer:
       time.sleep(5)
       continue
     for i in range(num_iter):
-      self.data_queue.put(self.initloader.get_next_batch(self.batch_size))
+      self.data_queue.put(self.iniloader.get_next_batch(self.batch_size))
     time.sleep(50)
 
   def train(self):
