@@ -191,11 +191,11 @@ class Trainer:
         running_loss += loss.item()
         train_loss += loss.item()
 
-        ps = torch.exp(logps)
-        top_p, top_class = ps.topk(1, dim=1)
-        equals = top_class == labels.view(*top_class.shape)
-        running_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
-        train_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
+#         ps = torch.exp(logps)
+#         top_p, top_class = ps.topk(1, dim=1)
+#         equals = top_class == labels.view(*top_class.shape)
+#         running_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
+#         train_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
 
         if (steps % print_every == 0 and steps != 0):
           print(f"Epoch [{epoch+1}|{epochs[1]}] "
@@ -219,15 +219,15 @@ class Trainer:
           batch_loss = self.loss(logps, labels)
           test_loss += batch_loss.item()
           
-          ps = torch.exp(logps)
-          top_p, top_class = ps.topk(1, dim=1)
-          equals = top_class == labels.view(*top_class.shape)
-          test_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
+#           ps = torch.exp(logps)
+#           top_p, top_class = ps.topk(1, dim=1)
+#           equals = top_class == labels.view(*top_class.shape)
+#           test_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
         
         self.train_losses.append(train_loss/len(self.trainloader))
         self.test_losses.append(test_loss/len(self.testloader))
-        self.train_accuracies.append(train_accuracy/len(self.trainloader))
-        self.test_accuracies.append(test_accuracy/len(self.testloader))
+#         self.train_accuracies.append(train_accuracy/len(self.trainloader))
+#         self.test_accuracies.append(test_accuracy/len(self.testloader))
 
         print(f"Epoch [{epoch+1}|{epochs[1]}] "
               f"Train loss: {train_loss/len(self.trainloader):.3f} "
