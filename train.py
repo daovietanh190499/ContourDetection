@@ -220,11 +220,9 @@ class Trainer:
     for epoch in range(epochs[0], epochs[1]):
 #       for steps, data in enumerate(self.trainloader):
       for steps in range(len(self.trainloader)):
-        if(self.train_queue.empty()):
+        while(self.train_queue.empty()):
           time.sleep(5)
-          continue
-        else:
-          data = self.train_queue.get()
+        data = self.train_queue.get()
         inputs, labels = data[0].to(self.device), data[1].to(self.device)
         self.optimizer.zero_grad()
         logps = self.model.forward(inputs)
@@ -258,11 +256,9 @@ class Trainer:
       with torch.no_grad():
 #         for data in self.testloader:
         for _ in range(len(self.testloader)):
-          if(self.test_queue.empty()):
+          while(self.test_queue.empty()):
             time.sleep(5)
-            continue
-          else:
-            data = self.test_queue.get()
+          data = self.test_queue.get()
           inputs, labels = data[0].to(self.device), data[1].to(self.device)
           logps = self.model.forward(inputs)
           batch_loss = self.loss(logps, labels)
