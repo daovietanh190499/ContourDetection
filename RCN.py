@@ -297,6 +297,7 @@ class RefineNet(nn.Module):
         x1 = self.do(x1)
 
         out = self.clf_conv(x1)
+        out = torch.sigmoid(out)
         return out
 
 
