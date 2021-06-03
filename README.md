@@ -75,7 +75,7 @@ trainer.show_dataloader()
 trainer.loss_plot()
 ```
 
-Đối với các loại dữ liệu nâng cao tự tạo có thể thay đổi đối tượng Dataloader cho phù hợp
+Đối với các loại dữ liệu nâng cao tự tạo có thể thay đổi đối tượng CustomDataset cho phù hợp
 
 Trong trường hợp muốn sử dụng tệp `train.py` cho mô hình khác chỉ cần truyền mô hình vào đối tượng `Trainer`
 
