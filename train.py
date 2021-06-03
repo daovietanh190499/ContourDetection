@@ -20,7 +20,6 @@ import argparse
 import tqdm
 import sys
 import random
-from multiprocessing import Process, Queue
 
 class CustomDataset(Dataset):
   def __init__(self, image_dir, label_dir, imgs_ann, mode, aug_mode):
@@ -69,18 +68,6 @@ class CustomDataset(Dataset):
     label_img = Image.open(self.label_dir + self.imgs[idx] + '.jpg')
     input, label = self.transform(input_img, label_img, self.mode, self.aug_mode)
     return input, label
-  
-  def get_next_batch(self, batch_size):
-    idx = np.random.randint(0, len(self.imgs), size = batch_size)
-    input_batch = torch.empty(batch_size,3,224,224)
-    label_batch = torch.empty(batch_size,1,224,224)
-
-    for i in range(batch_size):
-        input_img = Image.open(self.image_dir + self.imgs[idx[i]] + '.jpg').convert('RGB')
-        label_img = Image.open(self.label_dir + self.imgs[idx[i]] + '.jpg')
-        input_batch[i], label_batch[i] = self.transform(input_img, label_img, self.mode, self.aug_mode)
-    
-    return input_batch, label_batch
 
 class Trainer:
   def __init__(self, model):
@@ -96,13 +83,11 @@ class Trainer:
     self.test_accuracies = []
     self.start_epoch = 1
     self.max_epoch = 100
-    self.train_queue = Queue()
-    self.test_queue = Queue()
-    self.workers = 5
     self.trainloader = None
     self.testloader = None
     self.train_dataset = None
     self.test_dataset = None
+    self.num_workers = 2
     self.save_epoch_freq = 1
     self.save_iter_freq = 50
     self.print_freq = 10
@@ -145,8 +130,8 @@ class Trainer:
     if images_path != "" or ctns_path != "" or train_path != "" or val_path != "":
       self.train_dataset = CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop')
       self.test_dataset = CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop')
-      self.trainloader = DataLoader(self.train_dataset, batch_size=self.batch_size)
-      self.testloader = DataLoader(self.test_dataset, batch_size=self.batch_size)
+      self.trainloader = DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+      self.testloader = DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
     if self.model_save_path and self.model_save_name:
       self.model.load_state_dict(torch.load(self.model_save_path + self.model_save_name))
 
@@ -184,23 +169,6 @@ class Trainer:
     plt.plot(self.test_losses, label='Validation loss')
     plt.legend(frameon=False)
     plt.show()
-    
-  def add_batch2queue(self, q, num_iter, dataset):
-    while(q.qsize() > 100):
-      time.sleep(5)
-      continue
-    for i in range(num_iter):
-      q.put(dataset.get_next_batch(self.batch_size))
-    time.sleep(50)
-  
-  def multiloader(self, q, dataset):
-    multi_loader = []
-    num_iter = len(dataset)*(self.max_epoch - self.start_epoch)
-    num_iter_worker = num_iter//self.workers
-    for i in range(self.workers):
-      multi_loader.append(Process(target=self.add_batch2queue, args=(q, num_iter_worker if num_iter_worker < num_iter else num_iter, dataset)))
-      num_iter -= num_iter_worker
-    return multi_loader
 
   def train(self):
     epochs = (self.start_epoch, self.max_epoch)
@@ -210,19 +178,8 @@ class Trainer:
     train_accuracy = 0
     print_every = self.print_freq
     
-    multi_train_loader = self.multiloader(self.train_queue, self.train_dataset)
-    multi_val_loader = self.multiloader(self.test_queue, self.test_dataset)
-    
-    for loader_process in multi_train_loader + multi_val_loader:
-        loader_process.start()
-    time.sleep(1)
-    
     for epoch in range(epochs[0], epochs[1]):
-#       for steps, data in enumerate(self.trainloader):
-      for steps in range(len(self.trainloader)):
-        while(self.train_queue.empty()):
-          time.sleep(5)
-        data = self.train_queue.get()
+      for steps, data in enumerate(self.trainloader):
         inputs, labels = data[0].to(self.device), data[1].to(self.device)
         self.optimizer.zero_grad()
         logps = self.model.forward(inputs)
@@ -254,11 +211,7 @@ class Trainer:
       test_accuracy = 0
       self.model.eval()
       with torch.no_grad():
-#         for data in self.testloader:
-        for _ in range(len(self.testloader)):
-          while(self.test_queue.empty()):
-            time.sleep(5)
-          data = self.test_queue.get()
+        for data in self.testloader:
           inputs, labels = data[0].to(self.device), data[1].to(self.device)
           logps = self.model.forward(inputs)
           batch_loss = self.loss(logps, labels)
@@ -287,6 +240,3 @@ class Trainer:
       if epoch % self.save_epoch_freq == 0:
         print("Saving state ...")
         torch.save(self.model.state_dict(), self.model_save_path + 'cedn_epoch_' + str(epoch + 1) +'.pth')
-    
-    for loader_process in multi_train_loader + multi_val_loader:
-        loader_process.join()
