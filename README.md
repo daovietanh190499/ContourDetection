@@ -32,6 +32,7 @@ trainer.set_config(
     batch_size=64,
     start_epoch=30,
     max_epoch = 100,
+    num_workers = 5,
     images_path="",
     ctns_path="",
     train_path="",
@@ -46,7 +47,7 @@ Trong đó:
  - `batch_size`: kích thước lô (mặc định 64)
  - `start_epoch`: vị trí lần lặp khởi đầu
  - `max_epoch`: vị trí lần lặp tối đa
- - `num_workers`: số lượng workers được khởi tạo cho việc chạy đa tiến trình (mặc định là 0)
+ - `num_workers`: số lượng workers được khởi tạo cho việc chạy đa tiến trình (mặc định là 5)
  - `images_path` là đường dẫn tới thư mục ảnh gốc
  - `ctns_path` là đường dẫn tới thư mục nhãn
  - `train_path` là đường dẫn tới tệp `train.txt`
