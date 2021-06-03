@@ -257,7 +257,7 @@ class Trainer:
       self.model.eval()
       with torch.no_grad():
 #         for data in self.testloader:
-        for _ in len(self.testloader):
+        for _ in range(len(self.testloader)):
           if(self.test_queue.empty()):
             time.sleep(5)
             continue
