@@ -87,7 +87,7 @@ class Trainer:
     self.testloader = None
     self.train_dataset = None
     self.test_dataset = None
-    self.num_workers = 2
+    self.num_workers = 5
     self.save_epoch_freq = 1
     self.save_iter_freq = 50
     self.print_freq = 10
@@ -110,6 +110,7 @@ class Trainer:
     batch_size=64,
     start_epoch=30,
     max_epoch = 100,
+    num_workers = 5,
     images_path="",
     ctns_path="",
     train_path="",
@@ -127,6 +128,7 @@ class Trainer:
     self.model_save_name = model_save_name
     self.start_epoch = start_epoch
     self.max_epoch = max_epoch
+    self.num_workers = num_workers
     if images_path != "" or ctns_path != "" or train_path != "" or val_path != "":
       self.train_dataset = CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop')
       self.test_dataset = CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop')
