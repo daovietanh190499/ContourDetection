@@ -28,6 +28,7 @@ Thay đổi các cài đặt bằng lệnh `set_config`, bắt buộc phải ch�
 
 ```
 trainer.set_config(
+    name="custom_model"
     lr=1e-4, 
     batch_size=64,
     start_epoch=30,
@@ -45,6 +46,7 @@ trainer.set_config(
 ```
 
 Trong đó:
+ - `name`: tên cài đặt (bắt buộc, mặc định là `custom_model`)
  - `lr`: tốc độ học (mặc định 1e-4)
  - `batch_size`: kích thước lô (mặc định 64)
  - `start_epoch`: vị trí lần lặp khởi đầu
