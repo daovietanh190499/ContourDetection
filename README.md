@@ -36,6 +36,7 @@ trainer.set_config(
     save_epoch_freq = 1,
     save_iter_freq = 50,
     num_workers = 5,
+    loss_func = None,
     images_path="",
     ctns_path="",
     train_path="",
