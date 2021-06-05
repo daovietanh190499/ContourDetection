@@ -53,8 +53,9 @@ Trong đó:
  - `start_epoch`: vị trí lần lặp khởi đầu
  - `max_epoch`: vị trí lần lặp tối đa
  - `save_epoch_freq`: tần suất lưu mô hình sau một số lần duyệt (mặc định 1 lần duyệt)
- - `save_iter_freq`: tần suất lưu mô hình sau một số vòng lặp (mặc định 50 vòng lặp),
+ - `save_iter_freq`: tần suất lưu mô hình sau một số vòng lặp (mặc định 50 vòng lặp)
  - `num_workers`: số lượng workers được khởi tạo cho việc chạy đa tiến trình (mặc định là 5)
+ - `loss_func`: hàm thất thoát (mặc định là BCE có trọng số dành cho CEDN) xem cách định nghĩa hàm thất thoát ở dưới
  - `images_path` là đường dẫn tới thư mục ảnh gốc
  - `ctns_path` là đường dẫn tới thư mục nhãn
  - `train_path` là đường dẫn tới tệp `train.txt`
@@ -65,6 +66,15 @@ Trong đó:
 Một số thông tin khác 
  - `optimizer`: Adam
  - `critertion`: BCE
+
+Định nghĩa hàm thất thoát
+
+```
+def loss_func(outputs, target):
+  thực hiện tính loss ...
+```
+
+Trong đó `outputs` là đầu ra của mạng, `target` là nhãn
 
 Để tiến hành huấn luyện bằng tối tượng `trainer`
 
