@@ -76,6 +76,31 @@ def loss_func(outputs, target):
 
 Trong đó `outputs` là đầu ra của mạng, `target` là nhãn
 
+Hàm loss dành cho CEDN
+
+```
+def cedn_loss(outputs, targets):
+  weights = torch.empty_like(targets).to(cedn_trainer.device)
+  weights[targets >= .97] = 10
+  weights[targets < .97] = 1
+  res_loss = F.binary_cross_entropy(outputs, targets, weights)
+  return res_loss
+```
+
+Hàm loss dành cho RCN
+
+```
+def rcn_loss(outputs, targets):
+  weights = torch.empty_like(targets).to(rcn_trainer.device)
+  weights[targets >= .97] = 10
+  weights[targets < .97] = 1
+  outputs = F.interpolate(outputs, size=(224,224), mode="bilinear", align_corners=False)
+  outputs = outputs.to(rcn_trainer.device)
+  targets = targets.to(rcn_trainer.device)
+  loss = F.binary_cross_entropy(outputs, targets, weights)
+  return loss
+```
+
 Để tiến hành huấn luyện bằng tối tượng `trainer`
 
 ```
