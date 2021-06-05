@@ -10,7 +10,7 @@ def eval(model_net, model_path, image_path):
   model.load_state_dict(torch.load(model_path, map_location=device))
   model.to(device)
   model.eval()
-  test_img = Image.open(image_path)
+  test_img = Image.open(image_path).convert('RGB')
   test_img = np.array(test_img)
   test_img_t = np.rollaxis(test_img , 2)
   test_img_t = torch.tensor(test_img_t).unsqueeze(0).to(device).float()/255
