@@ -83,4 +83,16 @@ Trong trường hợp muốn sử dụng tệp `train.py` cho mô hình khác ch
 
 Khi sử dụng mã nguồn, đề nghị ghi rõ tên nguồn và tác giả
 
+Tiến hành chạy thử bằng cách import hàm `eval` từ tệp `eval.py`
 
+```
+from eval import eval
+result, img = eval(CEDN(), model_path, image_path)
+```
+
+Trong đó 
+ - `model_path`: đường dẫn tới file pretrain của mô hình
+ - `image_path`: đường dẫn tới ảnh
+Kết quả trả về gồm 
+ - `result`: kết quả dưới dạng ma trận tensor
+ - `img`: ảnh gốc dưới dạng ma trận numpy
