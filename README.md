@@ -87,6 +87,8 @@ Trong trường hợp muốn sử dụng tệp `train.py` cho mô hình khác ch
 
 Khi sử dụng mã nguồn, đề nghị ghi rõ tên nguồn và tác giả
 
+### Chạy thử và đánh giá mô hình
+
 Tiến hành chạy thử bằng cách import hàm `eval` từ tệp `eval.py`
 
 ```
