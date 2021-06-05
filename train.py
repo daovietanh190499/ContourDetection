@@ -83,6 +83,7 @@ class Trainer:
     self.train_accuracies = []
     self.test_accuracies = []
     
+    self.name = "custom_model"
     self.start_epoch = 1
     self.max_epoch = 100
     self.trainloader = None
@@ -115,6 +116,7 @@ class Trainer:
     
   def set_config(
     self,
+    name="custom_model",
     lr=1e-4, 
     batch_size=64,
     start_epoch=30,
@@ -130,7 +132,8 @@ class Trainer:
     model_save_path="",
     model_save_name=""
   ):
-    self.lr=lr
+    self.name = name
+    self.lr = lr
     self.batch_size=batch_size 
     self.images_path = images_path
     self.ctns_path = ctns_path
@@ -216,7 +219,7 @@ class Trainer:
               # f"Train accuracy: {running_accuracy/print_every:.3f}")
           if self.save_iter_freq > 0 and steps % self.save_iter_freq == 0 and steps != 0:
             print("Saving state ...")
-            torch.save(self.model, self.model_save_path + 'cedn_iter_' + str(steps) +'.pth')
+            torch.save(self.model, self.model_save_path + self.name + '_iter_' + str(steps) +'.pth')
           running_loss = 0
           running_accuracy = 0
 
@@ -253,4 +256,4 @@ class Trainer:
 
       if self.save_epoch_freq and epoch % self.save_epoch_freq == 0:
         print("Saving state ...")
-        torch.save(self.model.state_dict(), self.model_save_path + 'cedn_epoch_' + str(epoch + 1) +'.pth')
+        torch.save(self.model.state_dict(), self.model_save_path + self.name + '_epoch_' + str(epoch + 1) +'.pth')
