@@ -77,10 +77,12 @@ class Trainer:
     self.val_path = ""
     self.model_save_path = ""
     self.model_save_name = ""
+    
     self.train_losses = []
     self.test_losses = []
     self.train_accuracies = []
     self.test_accuracies = []
+    
     self.start_epoch = 1
     self.max_epoch = 100
     self.trainloader = None
@@ -92,17 +94,24 @@ class Trainer:
     self.save_iter_freq = 50
     self.print_freq = 10
     self.batch_size = 64
+    self.lr = 1e-4
     self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
     self.model = model
     self.model.to(self.device)
     print("device: ", self.device)
     self.model.train()
-    self.lr = 1e-4
-    self.optimizer = torch.optim.Adam([x for x in list(self.model.parameters()) if x.requires_grad == True], lr=self.lr)
-    self.bce =  nn.BCELoss(reduction = "none")
-    self.mse = nn.MSELoss(reduction = "none")
-    self.criterion = F.binary_cross_entropy
-    self.scheduler = lr_scheduler.StepLR(self.optimizer, step_size=1, gamma=0.98)
+    
+    self.loss_func = self.loss
+    self.optimizer = None
+    self.scheduler = None
+  
+  def loss(self,outputs, targets):
+    weights = torch.empty_like(targets).to(self.device)
+    weights[targets >= .97] = 10
+    weights[targets < .97] = 1
+    res_loss = F.binary_cross_entropy(outputs, targets, weights)
+    return res_loss
     
   def set_config(
     self,
@@ -113,6 +122,7 @@ class Trainer:
     save_epoch_freq = 1,
     save_iter_freq = 50,
     num_workers = 5,
+    loss_func = None,
     images_path="",
     ctns_path="",
     train_path="",
@@ -133,6 +143,12 @@ class Trainer:
     self.num_workers = num_workers
     self.save_epoch_freq = save_epoch_freq
     self.save_iter_freq = save_iter_freq
+    if loss_func:
+      self.loss_func = loss_func
+    else:
+      self.loss_func = self.loss
+    self.optimizer = torch.optim.Adam([x for x in list(self.model.parameters()) if x.requires_grad == True], lr=self.lr)
+    self.scheduler = lr_scheduler.StepLR(self.optimizer, step_size=1, gamma=0.98)
     if images_path != "" or ctns_path != "" or train_path != "" or val_path != "":
       self.train_dataset = CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop')
       self.test_dataset = CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop')
@@ -140,14 +156,6 @@ class Trainer:
       self.testloader = DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
     if self.model_save_path and self.model_save_name:
       self.model.load_state_dict(torch.load(self.model_save_path + self.model_save_name))
-
-
-  def loss(self,outputs, targets):
-    weights = torch.empty_like(targets).to(self.device)
-    weights[targets >= .97] = 10
-    weights[targets < .97] = 1
-    loss = self.criterion(outputs, targets, weights)
-    return loss
 
   def show_dataloader(self):
     dataiter = iter(self.trainloader)
@@ -189,7 +197,7 @@ class Trainer:
         inputs, labels = data[0].to(self.device), data[1].to(self.device)
         self.optimizer.zero_grad()
         logps = self.model.forward(inputs)
-        loss = self.loss(logps, labels)
+        loss = self.loss_func(logps, labels)
         loss.backward()
         self.optimizer.step()
         running_loss += loss.item()
@@ -220,7 +228,7 @@ class Trainer:
         for data in self.testloader:
           inputs, labels = data[0].to(self.device), data[1].to(self.device)
           logps = self.model.forward(inputs)
-          batch_loss = self.loss(logps, labels)
+          batch_loss = self.loss_func(logps, labels)
           test_loss += batch_loss.item()
           
 #           ps = torch.exp(logps)
