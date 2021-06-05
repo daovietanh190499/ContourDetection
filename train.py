@@ -110,6 +110,8 @@ class Trainer:
     batch_size=64,
     start_epoch=30,
     max_epoch = 100,
+    save_epoch_freq = 1,
+    save_iter_freq = 50,
     num_workers = 5,
     images_path="",
     ctns_path="",
@@ -129,6 +131,8 @@ class Trainer:
     self.start_epoch = start_epoch
     self.max_epoch = max_epoch
     self.num_workers = num_workers
+    self.save_epoch_freq = save_epoch_freq
+    self.save_iter_freq = save_iter_freq
     if images_path != "" or ctns_path != "" or train_path != "" or val_path != "":
       self.train_dataset = CustomDataset(self.images_path, self.ctns_path, self.train_path, mode='train', aug_mode='randomcrop')
       self.test_dataset = CustomDataset(self.images_path, self.ctns_path, self.val_path, mode='val', aug_mode='randomcrop')
@@ -202,7 +206,7 @@ class Trainer:
               f"Iter [{steps}|{len(self.trainloader)}] "
               f"Train loss: {running_loss/print_every:.3f} ")
               # f"Train accuracy: {running_accuracy/print_every:.3f}")
-          if steps % self.save_iter_freq == 0 and steps != 0:
+          if self.save_iter_freq > 0 and steps % self.save_iter_freq == 0 and steps != 0:
             print("Saving state ...")
             torch.save(self.model, self.model_save_path + 'cedn_iter_' + str(steps) +'.pth')
           running_loss = 0
@@ -239,6 +243,6 @@ class Trainer:
         train_accuracy = 0
       self.scheduler.step()
 
-      if epoch % self.save_epoch_freq == 0:
+      if self.save_epoch_freq and epoch % self.save_epoch_freq == 0:
         print("Saving state ...")
         torch.save(self.model.state_dict(), self.model_save_path + 'cedn_epoch_' + str(epoch + 1) +'.pth')
