@@ -32,6 +32,8 @@ trainer.set_config(
     batch_size=64,
     start_epoch=30,
     max_epoch = 100,
+    save_epoch_freq = 1,
+    save_iter_freq = 50,
     num_workers = 5,
     images_path="",
     ctns_path="",
@@ -47,6 +49,8 @@ Trong đó:
  - `batch_size`: kích thước lô (mặc định 64)
  - `start_epoch`: vị trí lần lặp khởi đầu
  - `max_epoch`: vị trí lần lặp tối đa
+ - `save_epoch_freq`: tần suất lưu mô hình sau một số lần duyệt (mặc định 1 lần duyệt)
+ - `save_iter_freq`: tần suất lưu mô hình sau một số vòng lặp (mặc định 50 vòng lặp),
  - `num_workers`: số lượng workers được khởi tạo cho việc chạy đa tiến trình (mặc định là 5)
  - `images_path` là đường dẫn tới thư mục ảnh gốc
  - `ctns_path` là đường dẫn tới thư mục nhãn
