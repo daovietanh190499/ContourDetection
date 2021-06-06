@@ -60,7 +60,7 @@ Trong đó:
  - `ctns_path` là đường dẫn tới thư mục nhãn
  - `train_path` là đường dẫn tới tệp `train.txt`
  - `val_path` là đường dẫn tới tệp `val.txt`
- - `model_save_path` là vị trí lưu mô hình sau mỗi epoch
+ - `model_save_path` là vị trí lưu mô hình sau một số lượng `save_epoch_freq` lần duyệt
  - `model_save_name` là tên mô hình tiền huấn luyện được truyền vào để tiếp tục huấn luyện, nếu huấn luyện từ đầu thì `model_save_name` bằng rỗng
 
 Một số thông tin khác 
