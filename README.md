@@ -1,9 +1,9 @@
-### Mã nguồn cài đặt cho hai phương pháp CEDN (Convolutional Encoder Decoder Network) và RCN (RefineContourNet)
+## Mã nguồn cài đặt cho hai phương pháp CEDN (Convolutional Encoder Decoder Network) và RCN (RefineContourNet)
 
   - CEDN: [https://arxiv.org/pdf/1603.04530.pdf](https://arxiv.org/pdf/1603.04530.pdf)
   - RCN: [https://arxiv.org/pdf/1904.13353.pdf](https://arxiv.org/pdf/1904.13353.pdf)
 
-### Huấn luyện với tập dữ liệu Pascal VOC + Pascal Context
+## Huấn luyện với tập dữ liệu Pascal VOC + Pascal Context
 
 Tải tập PASCAL VOC (ảnh huấn luyện) và PASCAL CONTEXT (ảnh nhãn) [tại đây](https://drive.google.com/drive/folders/15g2GNEQtr8ip9Tg-P_cTaK-iRKNZEtjQ?usp=sharing)
 
@@ -125,7 +125,7 @@ Trong trường hợp muốn sử dụng tệp `train.py` cho mô hình khác ch
 
 Khi sử dụng mã nguồn, đề nghị ghi rõ tên nguồn và tác giả
 
-### Chạy thử và đánh giá mô hình
+## Chạy thử và đánh giá mô hình
 
 Tiến hành chạy thử bằng cách import hàm `eval` từ tệp `eval.py`
 
