@@ -137,6 +137,7 @@ result, img = eval(CEDN(), model_path, image_path)
 Trong đó 
  - `model_path`: đường dẫn tới file pretrain của mô hình
  - `image_path`: đường dẫn tới ảnh
+
 Kết quả trả về gồm 
  - `result`: kết quả dưới dạng ma trận tensor
  - `img`: ảnh gốc dưới dạng ma trận numpy
