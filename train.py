@@ -172,10 +172,6 @@ class Trainer:
     img = torchvision.utils.make_grid(labels)
     npimg = img.numpy()
     plt.imshow(npimg[0])
-    # unique, counts = np.unique(npimg[0, :224, :224], return_counts=True)
-    # print(dict(zip(unique, counts)))
-    # plt.show()
-    # plt.imshow(npimg[0, :224, :224])
   
   def loss_plot(self):
     # plt.plot(train_accuracies, label='Training accuracy')
@@ -205,13 +201,7 @@ class Trainer:
         self.optimizer.step()
         running_loss += loss.item()
         train_loss += loss.item()
-
-#         ps = torch.exp(logps)
-#         top_p, top_class = ps.topk(1, dim=1)
-#         equals = top_class == labels.view(*top_class.shape)
-#         running_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
-#         train_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
-
+        # calculate acc
         if (steps % print_every == 0 and steps != 0):
           print(f"Epoch [{epoch+1}|{epochs[1]}] "
               f"Iter [{steps}|{len(self.trainloader)}] "
@@ -234,10 +224,7 @@ class Trainer:
           batch_loss = self.loss_func(logps, labels)
           test_loss += batch_loss.item()
           
-#           ps = torch.exp(logps)
-#           top_p, top_class = ps.topk(1, dim=1)
-#           equals = top_class == labels.view(*top_class.shape)
-#           test_accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
+          # calculate acc
         
         self.train_losses.append(train_loss/len(self.trainloader))
         self.test_losses.append(test_loss/len(self.testloader))
